@@ -28,16 +28,22 @@ def calcDff(video, winSz, hz):
     print(winSZ)
     (length, y, x) = video.shape
     shapedvideo = video.reshape(length,(y*x))
-    fmean = moving_average(shapedvideo, winSZ)
+    fmean = np.zeros(shapedvideo.shape, dtype=np.float32)
+    for rowind, row in enumerate(shapedvideo):
+        fmean[rowind] = np.convolve(row, np.ones((winSZ,))/winSZ, mode='same')
+
+#     fmean = moving_average(shapedvideo, winSZ)
     # fmean = shapedvideo
     print(fmean.shape)
+    fmean = fmean.reshape(length, (y*x))
+    print("new")
     #calculate moving mean
     f0 = np.percentile(fmean, 10, axis=0, interpolation='midpoint')
 
     # get percentile using prctile
     #fmean -mean(fmean,2)./f_o (percentile) ./ is array right division 
     print(f0)
-    tot = np.ndarray.astype(np.divide((fmean - f0),f0), np.float16)
+    tot = np.ndarray.astype(np.divide(np.subtract(fmean,f0),f0), np.float16)
     print(tot.dtype)
     fin = tot.reshape((length, y, x))
     return fin

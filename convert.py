@@ -1,10 +1,10 @@
 import numpy as np
 import av
-v = av.open(('./r3m1170210s2.avi'))
-video = np.zeros((30000, 516,388))
+v = av.open(('./data/av5_1.avi'))
+video = np.zeros((10000, 746,922), dtype=np.uint8)
 for ind, packet in enumerate(v.demux()):
     for frame in packet.decode():
-        truFrame = np.zeros((516,388))
+        truFrame = np.zeros((746,922))
         im = frame.to_image()
         arr = np.asarray(im)
         for i, val in enumerate(arr):
@@ -13,4 +13,4 @@ for ind, packet in enumerate(v.demux()):
         video[ind] = truFrame
         if(np.sum(video[ind])==0):
             break
-np.save('./r3m1170210s2AVI.npy', video)
+np.save('./data/AV_5_1.npy', video)
